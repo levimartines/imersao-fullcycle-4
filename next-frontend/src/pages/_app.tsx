@@ -1,38 +1,56 @@
 import { AppContext, AppProps } from 'next/app';
 import theme from '../styles/theme';
 import { useEffect } from 'react';
-import { SSRCookies, SSRKeycloakProvider } from '@react-keycloak/ssr';
+import { getKeycloakInstance, SSRCookies, SSRKeycloakProvider } from '@react-keycloak/ssr';
 import { KEYCLOAK_PUBLIC_CONFIG } from '../utils/auth';
 import { parseCookies } from '../utils/cookies';
 import { ThemeProvider } from '@material-ui/styles';
-import { Container, CssBaseline } from '@material-ui/core';
+import { CssBaseline } from '@material-ui/core';
+import { TenantProvider } from '../components/TenantProvider';
+import { keycloakEvents$ } from '../utils/http';
 
-interface MyAppProps extends AppProps {
-  cookies: any;
-}
 
-function MyApp({ Component, pageProps, cookies }: MyAppProps) {
+function MyApp({ Component, pageProps, cookies }: AppProps & { cookies: any }) {
   useEffect(() => {
     const jssStyles = document.querySelector('#jss-server-side');
     jssStyles?.parentElement?.removeChild(jssStyles);
   }, []);
 
   return (
-      <SSRKeycloakProvider
-        persistor={SSRCookies(cookies)}
-        keycloakConfig={KEYCLOAK_PUBLIC_CONFIG}
-        initOptions={{
-          onLoad: 'check-sso',
-          silentCheckSsoRedirectUri: typeof window !== 'undefined' ? `${window.location.origin}/silent-check-sso.html` : null,
-        }}
-      >
+    <SSRKeycloakProvider
+      keycloakConfig={KEYCLOAK_PUBLIC_CONFIG}
+      persistor={SSRCookies(cookies)}
+      initOptions={{
+        onLoad: 'check-sso',
+        silentCheckSsoRedirectUri:
+          typeof window !== 'undefined'
+            ? `${window.location.origin}/silent-check-sso.html`
+            : null,
+      }}
+      onEvent={async (event, error) => {
+        if (event === 'onAuthSuccess') {
+          keycloakEvents$.next({
+            type: 'success',
+          });
+        }
+        if (event === 'onAuthError') {
+          keycloakEvents$.next({
+            type: 'error',
+          });
+        }
+        if (event === 'onTokenExpired') {
+          console.log('onTokenExpired');
+          await getKeycloakInstance(null as any).updateToken(30);
+        }
+      }}
+    >
+      <TenantProvider>
         <ThemeProvider theme={theme}>
           <CssBaseline/>
-          <Container style={{ paddingTop: theme.spacing(2) }}>
-            <Component {...pageProps} />
-          </Container>
+          <Component {...pageProps} />
         </ThemeProvider>
-      </SSRKeycloakProvider>
+      </TenantProvider>
+    </SSRKeycloakProvider>
   );
 }
 

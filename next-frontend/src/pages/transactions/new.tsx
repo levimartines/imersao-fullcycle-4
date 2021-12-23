@@ -1,13 +1,17 @@
 import { NextPage } from 'next';
-import { Box, Button, Container, Grid, MenuItem, TextField, Typography } from '@material-ui/core';
+import { Box, Button, Grid, MenuItem, TextField, Typography } from '@material-ui/core';
 import { TransactionCategoryLabels, TransactionTypeLabels } from '../../models/transaction.model';
 import { useForm } from 'react-hook-form';
 import makeHttp from '../../utils/http';
 import { useRouter } from 'next/router';
+import { Page } from '../../components/Page';
+import { useKeycloak } from '@react-keycloak/ssr';
+import { Head } from '../../components/Head';
 
 const TransactionsNewPage: NextPage = () => {
   const { register, handleSubmit } = useForm();
   const router = useRouter();
+  const { initialized, keycloak } = useKeycloak();
 
   async function onSubmit(data: any) {
     try {
@@ -18,8 +22,18 @@ const TransactionsNewPage: NextPage = () => {
     }
   }
 
-  return (
-    <Container>
+  if (
+    typeof window !== 'undefined' &&
+    initialized &&
+    !keycloak?.authenticated
+  ) {
+    router.replace(`/login?from=${window!.location.pathname}`);
+    return null;
+  }
+
+  return keycloak?.authenticated ? (
+    <Page>
+      <Head title="Nova transação"/>
       <Typography component="h1" variant="h4">
         New Transaction
       </Typography>
@@ -93,8 +107,7 @@ const TransactionsNewPage: NextPage = () => {
           </Grid>
         </Grid>
       </form>
-    </Container>
-  );
+    </Page>) : null;
 };
 
 export default TransactionsNewPage;

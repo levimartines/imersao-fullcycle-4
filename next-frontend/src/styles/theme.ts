@@ -6,9 +6,22 @@ const theme = createTheme({
     type: 'dark',
     primary: {
       main: red[800],
+      contrastText: '#FFFFFF',
+    },
+    background: {
+      default: '#242526',
     },
     secondary: {
       main: '#282b32',
+    },
+  },
+  overrides: {
+    MuiCssBaseline: {
+      '@global': {
+        'html, body, body>div': {
+          height: '100%',
+        },
+      },
     },
   },
 });
