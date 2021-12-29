@@ -1,15 +1,16 @@
-import { Injectable } from "@nestjs/common";
-import { CreateReportDto } from "./dto/create-report.dto";
-import { UpdateReportDto } from "./dto/update-report.dto";
-import { InjectModel } from "@nestjs/sequelize";
-import { Report } from "./entities/report.entity";
-import { TenantService } from "../tenant/tenant.service";
+import { Injectable } from '@nestjs/common';
+import { CreateReportDto } from './dto/create-report.dto';
+import { UpdateReportDto } from './dto/update-report.dto';
+import { InjectModel } from '@nestjs/sequelize';
+import { Report } from './entities/report.entity';
+import { TenantService } from '../tenant/tenant.service';
 
 @Injectable()
 export class ReportsService {
-
-  constructor(@InjectModel(Report) private reportModel: typeof Report, private tenantService: TenantService) {
-  }
+  constructor(
+    @InjectModel(Report) private reportModel: typeof Report,
+    private tenantService: TenantService,
+  ) {}
 
   create(createReportDto: CreateReportDto) {
     return this.reportModel.create({
@@ -30,5 +31,4 @@ export class ReportsService {
     const report = await this.reportModel.findByPk(id, { rejectOnEmpty: true });
     return report.update(updateReportDto);
   }
-
 }

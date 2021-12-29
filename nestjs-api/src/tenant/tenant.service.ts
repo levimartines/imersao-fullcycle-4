@@ -1,13 +1,12 @@
-import { Injectable } from "@nestjs/common";
-import { Account } from "../accounts/entities/account.entity";
-import { InjectModel } from "@nestjs/sequelize";
+import { Injectable } from '@nestjs/common';
+import { Account } from '../accounts/entities/account.entity';
+import { InjectModel } from '@nestjs/sequelize';
 
 @Injectable()
 export class TenantService {
   private account?: Account;
 
-  constructor(@InjectModel(Account) private accountModel: typeof Account) {
-  }
+  constructor(@InjectModel(Account) private accountModel: typeof Account) {}
 
   get tenant() {
     return this.account;
@@ -22,7 +21,7 @@ export class TenantService {
       where: {
         subdomain,
       },
-      rejectOnEmpty: true
-    })
+      rejectOnEmpty: true,
+    });
   }
 }

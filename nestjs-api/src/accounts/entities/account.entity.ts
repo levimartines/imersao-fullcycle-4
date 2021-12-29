@@ -1,5 +1,12 @@
-import { Column, DataType, Default, Model, PrimaryKey, Table } from "sequelize-typescript";
-import { ToNumber } from "../../common/db/to-number.decorator";
+import {
+  Column,
+  DataType,
+  Default,
+  Model,
+  PrimaryKey,
+  Table,
+} from 'sequelize-typescript';
+import { ToNumber } from '../../common/db/to-number.decorator';
 
 @Table({
   tableName: 'accounts',
@@ -7,11 +14,10 @@ import { ToNumber } from "../../common/db/to-number.decorator";
   updatedAt: 'updated_at',
 })
 export class Account extends Model {
-
   @PrimaryKey
   @Column({
     type: DataType.UUID,
-    defaultValue: DataType.UUIDV4
+    defaultValue: DataType.UUIDV4,
   })
   id: string;
 

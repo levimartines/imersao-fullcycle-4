@@ -1,6 +1,13 @@
-import { Body, Controller, Get, Param, ParseUUIDPipe, Post } from "@nestjs/common";
-import { AccountsService } from "./accounts.service";
-import { CreateAccountDto } from "./dto/create-account.dto";
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseUUIDPipe,
+  Post,
+} from '@nestjs/common';
+import { AccountsService } from './accounts.service';
+import { CreateAccountDto } from './dto/create-account.dto';
 
 @Controller('accounts')
 export class AccountsController {
@@ -20,5 +27,4 @@ export class AccountsController {
   findOne(@Param('id', new ParseUUIDPipe()) id: string) {
     return this.accountsService.findOne(+id);
   }
-
 }

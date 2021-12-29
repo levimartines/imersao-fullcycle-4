@@ -1,7 +1,7 @@
-import { Global, Module } from "@nestjs/common";
-import { TenantService } from "./tenant.service";
-import { SequelizeModule } from "@nestjs/sequelize";
-import { Account } from "../accounts/entities/account.entity";
+import { Global, Module } from '@nestjs/common';
+import { TenantService } from './tenant.service';
+import { SequelizeModule } from '@nestjs/sequelize';
+import { Account } from '../accounts/entities/account.entity';
 
 @Global()
 @Module({
@@ -9,5 +9,4 @@ import { Account } from "../accounts/entities/account.entity";
   providers: [TenantService],
   exports: [TenantService],
 })
-export class TenantModule {
-}
+export class TenantModule {}

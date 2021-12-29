@@ -1,10 +1,19 @@
-import { BelongsTo, Column, DataType, Default, ForeignKey, Model, PrimaryKey, Table } from "sequelize-typescript";
-import { Account } from "../../accounts/entities/account.entity";
+import {
+  BelongsTo,
+  Column,
+  DataType,
+  Default,
+  ForeignKey,
+  Model,
+  PrimaryKey,
+  Table,
+} from 'sequelize-typescript';
+import { Account } from '../../accounts/entities/account.entity';
 
 export enum ReportStatus {
   PENDING = 'pending',
   COMPLETE = 'complete',
-  ERROR = 'error'
+  ERROR = 'error',
 }
 
 export const ReportStatusList = Object.values(ReportStatus);
@@ -15,7 +24,6 @@ export const ReportStatusList = Object.values(ReportStatus);
   updatedAt: 'updated_at',
 })
 export class Report extends Model {
-
   @PrimaryKey
   @Column({
     type: DataType.UUID,
@@ -37,7 +45,11 @@ export class Report extends Model {
   status: ReportStatus;
 
   @ForeignKey(() => Account)
-  @Column({ type: DataType.UUID, defaultValue: DataType.UUIDV4, allowNull: false })
+  @Column({
+    type: DataType.UUID,
+    defaultValue: DataType.UUIDV4,
+    allowNull: false,
+  })
   account_id: string;
 
   @BelongsTo(() => Account)

@@ -1,7 +1,6 @@
-import { IsISO8601, IsNotEmpty } from "class-validator";
+import { IsISO8601, IsNotEmpty } from 'class-validator';
 
 export class CreateReportDto {
-
   @IsISO8601()
   @IsNotEmpty()
   start_date: Date;
